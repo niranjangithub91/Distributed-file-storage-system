@@ -103,7 +103,7 @@ func Upload(w http.ResponseWriter, r *http.Request) {
 
 	for i := 3001; i < 3006; i++ {
 
-		finalDial := fmt.Sprintf("0.0.0.0:%d", i)
+		finalDial := fmt.Sprintf("serve%d:%d", i-3000, i)
 
 		conn, err := grpc.Dial(finalDial, grpc.WithInsecure())
 		if err != nil {
@@ -156,8 +156,10 @@ func Download(w http.ResponseWriter, r *http.Request) {
 	data := make([][]byte, 5)
 	b := z.Chunk_detail
 	count := 3001
+	size := 5
+	arr := make([]bool, size) // Creates a slice of size 10 with all elements set to false
 	for i := 0; i < 5; i++ {
-		finalDial := fmt.Sprintf("localhost:%d", count+i)
+		finalDial := fmt.Sprintf("serve%d:%d", i+1, i+count)
 		ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 		defer cancel()
 		conn, err := grpc.DialContext(ctx, finalDial,
@@ -167,6 +169,7 @@ func Download(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			fmt.Println("The server is down")
 			data[i] = nil
+			arr[i] = false
 			continue
 
 		}
@@ -183,6 +186,7 @@ func Download(w http.ResponseWriter, r *http.Request) {
 		}
 		l := res.Data
 		data[i] = l
+		arr[i] = true
 		if !res.Status {
 			fmt.Println("error is coming")
 		}

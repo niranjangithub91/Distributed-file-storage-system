@@ -21,6 +21,10 @@ WORKDIR /app
 # Copy the compiled binary
 COPY --from=builder /app/main .
 
+# Create the storage directory
+RUN mkdir -p /app/files \
+    && chmod -R 777 /app/files  # Ensure write permissions
+
 # Security: Run as non-root user
 RUN addgroup -S nonroot && adduser -S nonroot -G nonroot
 USER nonroot:nonroot

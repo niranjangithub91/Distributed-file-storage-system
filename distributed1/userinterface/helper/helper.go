@@ -15,7 +15,7 @@ var collection *mongo.Collection
 
 func init() {
 	fmt.Println("Data base storage")
-	clientopt := options.Client().ApplyURI("mongodb://localhost:27017")
+	clientopt := options.Client().ApplyURI("mongodb://admin:password@mongodb:27017")
 	client, err := mongo.Connect(context.Background(), clientopt)
 	if err != nil {
 		log.Fatal(err)

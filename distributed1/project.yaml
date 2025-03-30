@@ -1,0 +1,73 @@
+version: '3.8'
+services:
+  service1:
+    build: ./server1
+    container_name: serve1  # Custom container 
+    ports:
+      - 3001:3001
+    volumes:
+      - /home/niranjan/distributed1/files/files1:/app/files  # Mount files directory
+
+  service2:
+    build: ./server2
+    container_name: serve2
+    ports:
+      - 3002:3002
+    volumes:
+      - /home/niranjan/distributed1/files/files2:/app/files  # Mount files directory
+
+  service3:
+    build: ./server3
+    container_name: serve3
+    ports:
+      - 3003:3003
+    volumes:
+      - /home/niranjan/distributed1/files/files3:/app/files  # Mount files directory
+
+  service4:
+    build: ./parity1
+    container_name: serve4
+    ports:
+      - 3004:3004
+    volumes:
+      - /home/niranjan/distributed1/files/files4:/app/files  # Mount files directory
+
+  service5:
+    build: ./parity2
+    container_name: serve5
+    ports:
+      - 3005:3005
+    volumes:
+      - /home/niranjan/distributed1/files/files5:/app/files  # Mount files directory
+
+  service6:
+    build: ./userinterface
+    container_name: user  # Custom container name
+    ports:
+      - 3000:3000
+    volumes:
+      - /home/niranjan/distributed1/files:/app/files  # Mount files directory
+
+  mongodb:
+    image: mongo
+    container_name: distributed1-mongodb
+    ports:
+      - 27017:27017
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: password
+    volumes:
+      - mongo-data:/data/db  # MongoDB persistent storage
+
+  mongo-express:
+    image: mongo-express
+    container_name: distributed1-mongo-express
+    ports:
+      - 8081:8081
+    environment:
+      - ME_CONFIG_MONGODB_ADMINUSERNAME=admin
+      - ME_CONFIG_MONGODB_ADMINPASSWORD=password
+      - ME_CONFIG_MONGODB_SERVER=mongodb
+
+volumes:
+  mongo-data:    # Stores MongoDB database files

@@ -17,8 +17,9 @@ type server struct {
 }
 
 func (s *server) Send(ctx context.Context, req *userpb.DataSend) (*userpb.Return, error) {
+	make := fmt.Sprintf("files/%s", req.Save)
 	t1 := req.Data
-	file, err := os.Create(req.Save)
+	file, err := os.Create(make)
 	if err != nil {
 		panic(err)
 	}
@@ -32,7 +33,8 @@ func (s *server) Send(ctx context.Context, req *userpb.DataSend) (*userpb.Return
 	}, nil
 }
 func (s *server) Get(ctx context.Context, req *userpb.GetDataSend) (*userpb.GetDataReturn, error) {
-	chunkFile, err := os.Open(req.FileName)
+	make := fmt.Sprintf("files/%s", req.FileName)
+	chunkFile, err := os.Open(make)
 	if err != nil {
 		log.Fatal(err)
 	}

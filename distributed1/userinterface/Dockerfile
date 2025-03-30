@@ -10,7 +10,7 @@ RUN go mod download
 COPY . .
 
 # Build the binary (targeting controller/server.go)
-RUN CGO_ENABLED=0 GOOS=linux go build -o /app/main ./server/server.go
+RUN CGO_ENABLED=0 GOOS=linux go build -o /app/main ./main.go
 
 # ------------------------------------------------
 
@@ -21,16 +21,12 @@ WORKDIR /app
 # Copy the compiled binary
 COPY --from=builder /app/main .
 
-# Create the storage directory
-RUN mkdir -p /app/files \
-    && chmod -R 777 /app/files  # Ensure write permissions
-
 # Security: Run as non-root user
 RUN addgroup -S nonroot && adduser -S nonroot -G nonroot
 USER nonroot:nonroot
 
 # Expose port (adjust as needed)
-EXPOSE 3004
+EXPOSE 3000
 
 # Run the application
 ENTRYPOINT ["/app/main"]
